@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": [
+      "node"
+    ],
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "src",
+    "entrypoints",
+    "tests",
+    "scripts",
+    "wxt.config.ts"
+  ],
+  "extends": "./.wxt/tsconfig.json"
+}

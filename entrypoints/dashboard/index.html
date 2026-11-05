@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ScriptSentry Dashboard</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand">🛡️ ScriptSentry <span class="tag">trust-first userscripts</span></div>
+      <div class="sub">See what a script does, <b>before</b> it does it. Every script gets a Security Report, every update gets a diff, every version is kept.</div>
+      <div id="warn" class="warn" hidden>⚠ <b>chrome.userScripts is unavailable.</b> Enable <b>Allow User Scripts</b> for ScriptSentry in <code>chrome://extensions</code> (Chrome 138+) or turn on Developer Mode, then reload this page. Scripts can be managed and scanned here either way — they just won't run on pages until the toggle is on.</div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Import scripts</h2>
+        <p class="hint">Paste a Tampermonkey / Violentmonkey JSON backup or a raw <code>.user.js</code> file, or choose a file. Imported scripts are scanned and versioned — nothing is overwritten silently.</p>
+        <textarea id="importText" rows="6" placeholder='{"scripts":[{"name":"…","source":"// ==UserScript== …"}]}  — or paste a whole .user.js file'></textarea>
+        <div class="row">
+          <input type="file" id="importFile" accept=".js,.json,.txt,text/plain,application/json" />
+          <button id="importBtn" class="primary">Import + scan</button>
+        </div>
+        <div id="importResult" class="result"></div>
+      </section>
+
+      <section class="card">
+        <h2>Your scripts</h2>
+        <div id="list" class="list"><div class="empty">No scripts yet. Import one above — try <code>examples/safe.user.js</code> and then <code>examples/risky.user.js</code> from the repo to see the scanner at both extremes.</div></div>
+      </section>
+
+      <section class="card" id="detail" hidden>
+        <h2 id="dName">Script</h2>
+        <div class="row">
+          <div id="dScore" class="score"></div>
+          <button id="dToggle"></button>
+          <button id="dRollback">Roll back to previous version</button>
+          <button id="dDelete" class="danger">Remove script</button>
+        </div>
+        <h3>What this script can do</h3>
+        <ul id="dCaps"></ul>
+        <h3>Findings</h3>
+        <div id="dFindings"></div>
+        <h3>Check an update before accepting it (Diff Guardian)</h3>
+        <p class="hint">Paste the new version below — ScriptSentry diffs permissions, domains and risk <i>before</i> anything is installed.</p>
+        <textarea id="updateText" rows="5" placeholder="Paste the updated .user.js here"></textarea>
+        <div class="row"><button id="diffBtn">Preview update diff</button><button id="applyBtn" class="primary">Accept update (keeps history)</button></div>
+        <div id="diffResult" class="result"></div>
+        <h3>Version history</h3>
+        <div id="dHistory"></div>
+        <h3>Source</h3>
+        <pre id="dSource" class="source"></pre>
+      </section>
+    </main>
+    <footer>ScriptSentry v0.1.0 · GPL-3.0 · Fully open source — audit everything, including us.</footer>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

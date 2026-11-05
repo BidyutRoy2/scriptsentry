@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ScriptSentry — See what a script does, before it does it</title>
+<meta property="og:image" content="../../assets/social-preview.png" />
+<style>
+  :root { color-scheme: dark; --bg:#0e1116; --card:#171b22; --line:#262c36; --txt:#e8e9eb; --mut:#9aa3ad; --acc:#2563eb; --good:#3fb96f; --bad:#ef5350; --warn:#e6c229; }
+  * { box-sizing:border-box; } body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; background:var(--bg); color:var(--txt); }
+  .wrap { max-width:980px; margin:0 auto; padding:28px 20px 60px; }
+  .hero { text-align:center; padding:36px 0 10px; }
+  .shield { width:84px; height:84px; margin:0 auto 14px; border-radius:22px; background:#14532d; border:2px solid var(--good); display:flex; align-items:center; justify-content:center; font-size:42px; }
+  h1 { font-size:44px; margin:0 0 8px; letter-spacing:-.5px; } .tag { font-size:19px; color:var(--mut); }
+  .tag b { color:var(--txt); }
+  .cta { margin:22px 0 6px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .btn { padding:11px 20px; border-radius:10px; border:1px solid #333b48; background:#232833; color:var(--txt); font-weight:600; text-decoration:none; font-size:14.5px; }
+  .btn.primary { background:var(--acc); border-color:var(--acc); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; margin-top:34px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; }
+  .card h3 { margin:0 0 8px; font-size:16px; } .card p { color:var(--mut); line-height:1.55; font-size:14px; margin:0; }
+  .report { margin-top:34px; }
+  .scorebar { display:flex; gap:16px; flex-wrap:wrap; }
+  .score { flex:1; min-width:260px; border:1px solid var(--line); border-radius:12px; padding:16px; background:#12151b; }
+  .score .big { font-size:34px; font-weight:800; } .good { color:var(--good); } .bad { color:var(--bad); }
+  .finding { font-size:13.5px; color:var(--mut); border-left:4px solid var(--line); padding:6px 10px; margin-top:8px; line-height:1.5; }
+  .finding.crit { border-color:var(--bad); } .finding.high { border-color:#ef8f3c; } .finding.med { border-color:var(--warn); }
+  code { background:#0b0e12; padding:1px 6px; border-radius:6px; font-size:12.5px; }
+  footer { text-align:center; color:var(--mut); font-size:13px; margin-top:44px; line-height:1.7; }
+  .vs { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:16px; text-align:left; }
+  .vs div { background:#12151b; border:1px solid var(--line); border-radius:12px; padding:14px 16px; font-size:14px; line-height:1.6; color:var(--mut); }
+  .vs b { color:var(--txt); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="shield">🛡️</div>
+    <h1>ScriptSentry</h1>
+    <div class="tag">See what a script does, <b>before</b> it does it.</div>
+    <div class="cta">
+      <a class="btn primary" href="../../README.md">Read the README</a>
+      <a class="btn" href="../roadmap.md">Roadmap</a>
+      <a class="btn" href="../security-model.md">Security model</a>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h3>🔍 Pre-install Security Report</h3><p>Every script is statically scanned before it runs: where it runs, what it can read, where it can send data, whether it's obfuscated — a 0–100 trust score in plain English, not raw source code.</p></div>
+    <div class="card"><h3>⤺ Diff Guardian + rollback</h3><p>Updates are the supply-chain attack. ScriptSentry diffs new permissions, domains and libraries <i>before</i> an update is applied, keeps every version, and rolls back in one click.</p></div>
+    <div class="card"><h3>📥 Switch in minutes</h3><p>Import your Tampermonkey or Violentmonkey backup — scripts and all — with a compatibility report that flags anything MV3 can't run. Nothing is overwritten silently, ever.</p></div>
+  </div>
+
+  <div class="card report">
+    <h3 style="margin-top:0">The scanner, at both extremes <span style="color:var(--mut); font-weight:500">(real output, <code>node scripts/scan.ts examples/…</code>)</span></h3>
+    <div class="scorebar">
+      <div class="score">
+        <div class="big good">100/100 · A</div>
+        <div><code>examples/safe.user.js</code> — Gentle Dark Mode</div>
+        <div class="finding" style="border-color:var(--good)">Runs only on: example.com · Can restyle pages (add CSS) · No findings.</div>
+      </div>
+      <div class="score">
+        <div class="big bad">0/100 · F</div>
+        <div><code>examples/risky.user.js</code> — labelled test fixture, DO NOT INSTALL</div>
+        <div class="finding crit"><b>CRITICAL</b> · Executes code from strings (eval) · Crypto-mining indicators</div>
+        <div class="finding high"><b>HIGH</b> · Runs on EVERY website · Reads cookies · Reads password fields · Obfuscated code · @connect *</div>
+        <div class="finding med"><b>MEDIUM</b> · Clipboard writes · Downloads files · @require with no integrity hash · Fetches undeclared domains</div>
+      </div>
+    </div>
+    <div class="vs">
+      <div><b>Tampermonkey</b> — advanced, but closed-source since v2.9. You can't audit the thing that audits nothing.</div>
+      <div><b>Violentmonkey</b> — open, but basic: no scan, no update diffs, no rollback.</div>
+      <div><b>ScriptSentry</b> — open <i>and</i> advanced <i>and</i> safe: GPL-3.0, reproducible, no telemetry.</div>
+    </div>
+  </div>
+
+  <footer>
+    ScriptSentry v0.1.0 · Phase 0 + Phase 1 (Trust Pack) · GPL-3.0 · Fully open source<br/>
+    Roadmap — Phase 2: AI Repair · Phase 3: Git / E2E sync · Phase 4: Visual Builder + verified marketplace
+  </footer>
+</div>
+</body>
+</html>
